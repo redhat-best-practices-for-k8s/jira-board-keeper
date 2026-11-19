@@ -59,7 +59,11 @@ jobs:
       - name: Prepare review candidates
         id: candidates
         run: |
-          if [ -n "$REVIEW_KEYS" ]; then
+          EPIC_REVIEW_ENABLED=$(awk '/^epic_review:/{f=1} f&&/enabled:/{print $2; exit}' config.yaml)
+          if [ "$EPIC_REVIEW_ENABLED" = "false" ] && [ -z "$REVIEW_KEYS" ]; then
+            echo "epic_review disabled in config, skipping"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          elif [ -n "$REVIEW_KEYS" ]; then
             echo "$REVIEW_KEYS" | tr ',' '\n' | jq -R . | jq -s . > candidates.json
             echo "ready=true" >> "$GITHUB_OUTPUT"
           elif [ -f candidates.json ]; then

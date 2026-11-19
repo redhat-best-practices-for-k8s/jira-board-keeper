@@ -50,6 +50,10 @@ status_report:
   enabled: true
   lookback_days: 7
 
+# Epic description quality review (GitHub Issues + Slack alerts)
+epic_review:
+  enabled: true
+
 # Logging
 log_level: "info"
 
